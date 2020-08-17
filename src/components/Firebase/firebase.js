@@ -18,36 +18,6 @@ class Firebase {
 
     this.db = app.firestore();
   }
-
-  // Notes API
-  createNote(note) {
-    if (!note) return;
-
-    this.db
-      .collection('notes')
-      .add({
-        text: note,
-      })
-      .then((docRef) => {
-        console.log('Document written with ID: ', docRef.id);
-      })
-      .catch((error) => {
-        console.error('Error adding document: ', error);
-      });
-  }
-
-  getNotes() {
-    return this.db
-      .collection('notes')
-      .get()
-      .then((querySnapshot) => {
-        const notes = [];
-        querySnapshot.forEach((doc) => {
-          notes.push({ id: doc.id, ...doc.data() });
-        });
-        return notes;
-      });
-  }
 }
 
 export default Firebase;

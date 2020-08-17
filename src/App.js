@@ -7,11 +7,23 @@ function App({ firebase }) {
   const [notes, setNotes] = React.useState([]);
 
   React.useEffect(() => {
-    (async function fetchNotesFromStore() {
-      const data = await firebase.getNotes();
-      setNotes(data);
-    })();
+    const unsubscribe = firebase.db
+      .collection('notes')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot((querySnapshot) => {
+        const data = [];
+
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+
+        setNotes(data);
+      });
+
+    // unsubscribe from firebase document changes
+    return () => unsubscribe();
   }, [firebase]);
+
   return (
     <>
       <div className="app">
