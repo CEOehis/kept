@@ -1,59 +1,48 @@
-import React, { useState, useRef, useEffect } from 'react';
-import ReactQuill from 'react-quill';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import app from 'firebase/app';
 
 function NoteEditor({ firebase }) {
   const [value, setValue] = useState('');
   const [isOpen, setOpen] = useState(false);
-  const [raw, setRaw] = useState('');
-  const quill = useRef(null);
 
   useEffect(() => {
-    quill.current.focus();
     setOpen(value && true);
   }, [value]);
 
   function submitForm() {
-    const rx = /^[\n ]+$/; // check for line feed and spaces only
-    if (rx.test(raw)) {
-      setValue('');
-      setOpen(false);
-      return;
-    }
-
+    if (!value.trim().length) return;
     firebase.db
       .collection('notes')
       .add({
         text: value,
         createdAt: app.firestore.FieldValue.serverTimestamp(),
       })
-      .then((docRef) => {
-        console.log('Document written with ID: ', docRef.id);
-      })
+      .then((/* docRef */) => {})
       .catch((error) => {
         console.error('Error adding document: ', error);
       });
     setValue('');
   }
 
-  function handleInputChange(content, delta, source, editor) {
-    setValue(content);
-    setRaw(editor.getText()); // use this to track the raw content of the text box
+  function handleInputChange(e) {
+    setValue(e.target.value);
   }
 
   return (
-    <div className="editor">
-      <ReactQuill
-        placeholder="Take a note"
-        ref={quill}
-        theme="bubble"
+    <div className="editor flex flex-col p-5 px-2 w-1/4 min-w-0 shadow rounded mx-auto m-8">
+      <textarea
         value={value}
-        onChange={handleInputChange}
+        aria-label="Take a note..."
         onBlur={submitForm}
+        onChange={handleInputChange}
       />
       {isOpen && (
-        <button type="button" onClick={submitForm} className="close">
+        <button
+          type="button"
+          onClick={submitForm}
+          className="close px-6 py-1 self-end rounded hover:bg-gray-100 focus:bg-gray-300 focus:outline-none"
+        >
           {value.length ? 'Save' : 'Close'}
         </button>
       )}

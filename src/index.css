@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-body, html {
+body,
+html {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -49,15 +50,28 @@ code {
   font-size: 1em;
 }
 
-.editor .close:hover {
-  background: rgb(240, 240, 240);
-}
-
-.editor .close:focus {
-  background: rgb(219, 218, 218);
-}
-
 .ql-container {
   font-family: 'Roboto', sans-serif;
-  font-size: .875em;
+  font-size: 0.875em;
+}
+
+.ql-editor.ql-blank::before {
+  color: #5e5e5e;
+  content: attr(data-placeholder);
+  font-style: normal;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 1em;
+  left: 15px;
+  pointer-events: none;
+  position: absolute;
+  right: 15px;
+  box-shadow: 0 0 black;
+}
+
+.card {
+  display: inline-block;
+  min-height: 150px;
+  width: 300px;
+  vertical-align: top;
 }
